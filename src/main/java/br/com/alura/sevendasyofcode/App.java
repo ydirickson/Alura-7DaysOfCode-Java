@@ -6,7 +6,6 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
-import java.util.Arrays;
 
 /**
  * Hello world!
@@ -15,10 +14,10 @@ import java.util.Arrays;
 public class App 
 {
     public static void main( String[] args ) {
-        String apiKey = args[0];
-        if(apiKey == null || apiKey.isBlank()){
+        if(args.length == 0 || args[0] == null || args[0].isBlank()){
             throw new IllegalArgumentException("O parâmetro para a APIKey é obrigatório");
         }
+        String apiKey = args[0];
         URI uri = null;
         try {
             System.out.println("Construindo a URI de chamadas da API do IMDB");
