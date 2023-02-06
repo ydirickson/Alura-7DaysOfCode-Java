@@ -10,7 +10,7 @@ Repositório para o [#7DaysOfCode](https://7daysofcode.io/) Java Challenge da Al
 ## :hammer: Passos do Desafio
 
  - `Dia 1`: Criando a estrutura do projeto e executando uma chamada para a URL que retorna os Top 250 Filmes da base.
- - `Dia 2`: ??????.
+ - `Dia 2`: Fazendo o parsing manual do JSON de retorno para extrair apenas o título do filme.
  - `Dia 3`: ??????.
  - `Dia 4`: ??????.
  - `Dia 5`: ??????.
