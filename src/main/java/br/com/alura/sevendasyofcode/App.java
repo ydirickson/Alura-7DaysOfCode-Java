@@ -7,12 +7,15 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.IntStream;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -50,7 +53,8 @@ public class App
     }
 
     public static void imprimirResultado(String json){
-        List<String> resultado = parseJsonManual(json);
+        //List<Map<String,String>> resultado = parseJsonLib(json);
+        List<Map<String,String>> resultado = parseJsonManual(json);
 
         IntStream.range(0, resultado.size())
             .forEach(idx -> {
@@ -61,29 +65,54 @@ public class App
                     numeracao = "0"+numeracao;
                 }
                 
-                System.out.println(String.format("Filme %s: %s", numeracao, resultado.get(idx)));
+                System.out.println(
+                    String.format(
+                        "Filme %s - Título: %s URL: %s", 
+                        numeracao, 
+                        resultado.get(idx).get("fullTitle"),
+                        resultado.get(idx).get("image")
+                    )
+                );
             });
     }
 
-    public static List<String> parseJsonManual(String json){
-        List<String> lista = new ArrayList<>();
+    public static List<Map<String,String>> parseJsonManual(String json){
+        List<Map<String,String>> lista = new ArrayList<>();
 
 
-        Pattern patternArray = Pattern.compile("\\[*.\\]");
+        Pattern patternArray = Pattern.compile("\\[(.*?)\\]");
+        Pattern patternObjects = Pattern.compile("\\{(.*?)\\}");
         Matcher matcherArray = patternArray.matcher(json);
-        if(matcherArray.matches()){ 
-            System.out.println("Extraindo Array de itens");
-            System.out.println(matcherArray.group(0));
-        }
+        if(matcherArray.find()){
+            List<String> filmes = new ArrayList<>();
+            String jsonArray = matcherArray.group(1);
+            Matcher matcherObjects = patternObjects.matcher(jsonArray);
+            while(matcherObjects.find()){
+                filmes.add(matcherObjects.group(1));
+            }
+
+            for(String filme : filmes){
+                Map<String, String> objeto = new HashMap<>();
+                String[] atributos = filme.split("\",\"");
+                for(String atributo : atributos){
+                    String[] partes = atributo.split("\":\"");
+                    String chave = partes[0];
+                    String valor = partes[1];
+                    objeto.put(chave, valor);
+                }
+                lista.add(objeto);
+            }
+            
+        }   
 
 
 
         return lista;
     }
 
-    public static List<String> parseJsonLib(String json){
+    public static List<Map<String,String>> parseJsonLib(String json){
         ObjectMapper mapper = new ObjectMapper();
-        List<String> lista = new ArrayList<>();
+        List<Map<String,String>> lista = new ArrayList<>();
         try {
             System.out.println("Começando a parsear o resultado usando o Jackson");
             JsonNode tree = mapper.readTree(json);
@@ -92,7 +121,7 @@ public class App
             JsonNode items = tree.get("items");
             if(items.isArray()){
                 for(JsonNode item : items){
-                    lista.add(item.get("fullTitle").asText());
+                    lista.add(mapper.convertValue(item, new TypeReference<Map<String,String>>() {}));
                 }
             }
         } catch (JsonProcessingException e) {
