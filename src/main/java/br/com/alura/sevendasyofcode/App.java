@@ -8,6 +8,8 @@ import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.IntStream;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -48,7 +50,7 @@ public class App
     }
 
     public static void imprimirResultado(String json){
-        List<String> resultado = parseJsonLib(json);
+        List<String> resultado = parseJsonManual(json);
 
         IntStream.range(0, resultado.size())
             .forEach(idx -> {
@@ -65,6 +67,17 @@ public class App
 
     public static List<String> parseJsonManual(String json){
         List<String> lista = new ArrayList<>();
+
+
+        Pattern patternArray = Pattern.compile("\\[*.\\]");
+        Matcher matcherArray = patternArray.matcher(json);
+        if(matcherArray.matches()){ 
+            System.out.println("Extraindo Array de itens");
+            System.out.println(matcherArray.group(0));
+        }
+
+
+
         return lista;
     }
 
