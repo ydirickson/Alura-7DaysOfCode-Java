@@ -7,16 +7,17 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.IntStream;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import br.com.alura.sevendasyofcode.models.Movie;
 
 /**
  * Hello world!
@@ -47,13 +48,18 @@ public class App
         System.out.println("Executando a chamada");
         client.sendAsync(request, BodyHandlers.ofString())
                     .thenApply(HttpResponse::body)
-                    .thenAccept((App::imprimirResultado))
+                    //.thenAccept((App::imprimirResultado))
+                    .thenAccept(App::exportarHTML)
                     .join();
     }
 
+    public static void exportarHTML(String json){
+        List<Map<String,String>> resultado = parseJsonManual(json);
+    }
+
     public static void imprimirResultado(String json){
-        List<Movie> resultado = parseJsonLib(json);
-        //List<Movie> resultado = parseJsonManual(json);
+        //List<Map<String,String>> resultado = parseJsonLib(json);
+        List<Map<String,String>> resultado = parseJsonManual(json);
 
         IntStream.range(0, resultado.size())
             .forEach(idx -> {
@@ -68,15 +74,15 @@ public class App
                     String.format(
                         "Filme %s - Título: %s URL: %s", 
                         numeracao, 
-                        resultado.get(idx).title(),
-                        resultado.get(idx).image()
+                        resultado.get(idx).get("fullTitle"),
+                        resultado.get(idx).get("image")
                     )
                 );
             });
     }
 
-    public static List<Movie> parseJsonManual(String json){
-        List<Movie> lista = new ArrayList<>();
+    public static List<Map<String,String>> parseJsonManual(String json){
+        List<Map<String,String>> lista = new ArrayList<>();
 
 
         Pattern patternArray = Pattern.compile("\\[(.*?)\\]");
@@ -91,22 +97,27 @@ public class App
             }
 
             for(String filme : filmes){
+                Map<String, String> objeto = new HashMap<>();
                 String[] atributos = filme.split("\",\"");
-                Movie movie = new Movie(
-                    atributos[3].split("\":\"")[1],
-                    atributos[5].split("\":\"")[1],
-                    Double.parseDouble(atributos[7].split("\":\"")[1]),
-                    Integer.parseInt(atributos[4].split("\":\"")[1])
-                );
-                lista.add(movie);
+                for(String atributo : atributos){
+                    String[] partes = atributo.split("\":\"");
+                    String chave = partes[0];
+                    String valor = partes[1];
+                    objeto.put(chave, valor);
+                }
+                lista.add(objeto);
             }
-        }
+            
+        }   
+
+
+
         return lista;
     }
 
-    public static List<Movie> parseJsonLib(String json){
+    public static List<Map<String,String>> parseJsonLib(String json){
         ObjectMapper mapper = new ObjectMapper();
-        List<Movie> lista = new ArrayList<>();
+        List<Map<String,String>> lista = new ArrayList<>();
         try {
             System.out.println("Começando a parsear o resultado usando o Jackson");
             JsonNode tree = mapper.readTree(json);
@@ -115,7 +126,7 @@ public class App
             JsonNode items = tree.get("items");
             if(items.isArray()){
                 for(JsonNode item : items){
-                    lista.add(mapper.convertValue(item, Movie.class));
+                    lista.add(mapper.convertValue(item, new TypeReference<Map<String,String>>() {}));
                 }
             }
         } catch (JsonProcessingException e) {
