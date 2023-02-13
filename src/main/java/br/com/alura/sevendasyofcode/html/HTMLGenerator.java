@@ -96,7 +96,7 @@ public class HTMLGenerator {
     
     cartao.append("\t\t\t\t\t\t").append(CARD_BODY_OPEN_TAG).append("\n");
     
-    cartao.append("\t\t\t\t\t\t\t").append(String.format(P_TAG, movie.ratign(), movie.year())).append("\n");
+    cartao.append("\t\t\t\t\t\t\t").append(String.format(P_TAG, movie.rating(), movie.year())).append("\n");
     cartao.append("\t\t\t\t\t\t").append(CARD_BODY_CLOSE_TAG).append("\n");
     cartao.append("\t\t\t\t\t").append(CARD_CLOSE_TAG).append("\n");
     cartao.append("\t\t\t\t").append(COL_CLOSE_TAG).append("\n");
