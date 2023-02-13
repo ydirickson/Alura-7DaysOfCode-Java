@@ -12,7 +12,7 @@ Repositório para o [#7DaysOfCode](https://7daysofcode.io/) Java Challenge da Al
  - `Dia 1`: Criando a estrutura do projeto e executando uma chamada para a URL que retorna os Top 250 Filmes da base.
  - `Dia 2`: Fazendo o parsing manual do JSON de retorno para extrair apenas o título do filme.
  - `Dia 3`: Criando um modelo Java para representar o Filme do IMDB.
- - `Dia 4`: ??????.
+ - `Dia 4`: Gerando uma página HTML (formatada com Bootstrap) para mostrar uma lista visual dos Top 250 Filmes do IMDB.
  - `Dia 5`: ??????.
  - `Dia 6`: ??????.
  - `Dia 7`: ??????.
