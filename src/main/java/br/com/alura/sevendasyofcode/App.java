@@ -1,5 +1,8 @@
 package br.com.alura.sevendasyofcode;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.http.HttpClient;
@@ -16,6 +19,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import br.com.alura.sevendasyofcode.html.HTMLGenerator;
 import br.com.alura.sevendasyofcode.models.Movie;
 
 /**
@@ -47,8 +51,20 @@ public class App
         System.out.println("Executando a chamada");
         client.sendAsync(request, BodyHandlers.ofString())
                     .thenApply(HttpResponse::body)
-                    .thenAccept((App::imprimirResultado))
+                    .thenAccept((App::exportarHTML))
                     .join();
+    }
+
+    public static void exportarHTML(String json){
+        List<Movie> resultado = parseJsonManual(json);
+
+        try (FileWriter writer = new FileWriter(new File("imdb_list.html"))){
+            HTMLGenerator generator = new HTMLGenerator(writer);
+            generator.generate(resultado);
+        } catch(IOException e){
+            System.err.println("Erro ao processar HTML: "+e.toString());
+        }
+        
     }
 
     public static void imprimirResultado(String json){
