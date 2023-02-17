@@ -7,15 +7,15 @@ import java.util.regex.Pattern;
 
 import br.com.alura.sevendasyofcode.models.Movie;
 
-public class ImdbMovieParser {
+public class ImdbMovieParser implements JsonParser {
   
   private static final String ATTRIBUTE_PATTERN = "\":\"";
 
   private final Pattern patternArray = Pattern.compile("\\[(.*?)\\]");
   private final Pattern patternObjects = Pattern.compile("\\{(.*?)\\}");
 
-
-  public List<Movie> parseListMovies(String json){
+  @Override
+  public List<Movie> parseContentList(String json){
     List<Movie> lista = new ArrayList<>();
     Matcher matcherArray = patternArray.matcher(json);
     if(matcherArray.find()){
