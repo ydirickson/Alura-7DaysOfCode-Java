@@ -8,6 +8,7 @@ import java.util.List;
 import br.com.alura.sevendasyofcode.client.ImdbApiClient;
 import br.com.alura.sevendasyofcode.html.HTMLGenerator;
 import br.com.alura.sevendasyofcode.models.Movie;
+import br.com.alura.sevendasyofcode.parser.ImdbMovieParser;
 
 /**
  * Hello world!
@@ -21,8 +22,10 @@ public class App
         }
         String apiKey = args[0];
         try (FileWriter writer = new FileWriter(new File("imdb_list.html"))){
-            System.out.println("Listando os top 250 filmes");
-            List<Movie> lista = new ImdbApiClient(apiKey).listarTop250();
+            System.out.println("Obtendo o JSON da chamada da API");
+            String json = new ImdbApiClient(apiKey).getJSON("Top250Movies");
+            System.out.println("Parseando lista de conteúdo");
+            List<Movie> lista = new ImdbMovieParser().parseContentList(json);
             System.out.println("Escrevendo resultado no HTML");
             HTMLGenerator generator = new HTMLGenerator(writer);
             generator.generate(lista);
