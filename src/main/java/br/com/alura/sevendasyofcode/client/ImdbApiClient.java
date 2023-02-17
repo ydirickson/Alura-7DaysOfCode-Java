@@ -27,7 +27,7 @@ public class ImdbApiClient {
   }
 
   public List<Movie> listarTop250(){
-    return this.parser.parseListMovies(
+    return this.parser.parseContentList(
       this.getJSON(IMDB_TOP_250_MOVIES)
     );
   }
