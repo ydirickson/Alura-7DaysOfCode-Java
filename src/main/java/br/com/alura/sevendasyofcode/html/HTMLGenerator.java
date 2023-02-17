@@ -2,7 +2,6 @@ package br.com.alura.sevendasyofcode.html;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.util.Collections;
 import java.util.List;
 
 import br.com.alura.sevendasyofcode.models.Movie;
