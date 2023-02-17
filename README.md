@@ -14,7 +14,7 @@ Repositório para o [#7DaysOfCode](https://7daysofcode.io/) Java Challenge da Al
  - `Dia 3`: Criando um modelo Java para representar o Filme do IMDB.
  - `Dia 4`: Gerando uma página HTML (formatada com Bootstrap) para mostrar uma lista visual dos Top 250 Filmes do IMDB.
  - `Dia 5`: Encapsulando a lógica do código em classes separadas para a chamada da API e do parsing da lista de filmes.
- - `Dia 6`: ??????.
+ - `Dia 6`: Criando abstrações para as classes, de forma a conseguir consumir uma segunda API apenas pelas interfaces.
  - `Dia 7`: ??????.
 
 ## Licença
