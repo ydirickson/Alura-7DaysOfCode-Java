@@ -14,7 +14,7 @@ import br.com.alura.sevendasyofcode.parser.ImdbMovieParser;
  * Hello world!
  *
  */
-public class App 
+public class IMDBApp 
 {
     public static void main( String[] args ) {
         if(args.length == 0 || args[0] == null || args[0].isBlank()){
@@ -34,5 +34,5 @@ public class App
         }
     }
 
-   
+    
 }
